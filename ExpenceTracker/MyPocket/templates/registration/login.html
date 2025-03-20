@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - MyPocket{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/login_style.css' %}">
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card login-card p-4 shadow-lg">
+        <h2 class="text-center fw-bold">Login</h2>
+
+        <!-- Display errors -->
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <strong>Error:</strong>
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field|title }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Login Form -->
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <div class="form-group mb-3">
+                <label for="{{ form.username.id_for_label }}" class="form-label">Username:</label>
+                <div class="input-box d-flex align-items-center">
+                    <i class="bi bi-person-fill me-2"></i>
+                    {{ form.username }}
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="{{ form.password.id_for_label }}" class="form-label">Password:</label>
+                <div class="input-box d-flex align-items-center">
+                    <i class="bi bi-lock-fill me-2"></i>
+                    {{ form.password }}
+                    <i class="bi bi-eye-slash toggle-password ms-2" onclick="togglePasswordVisibility('id_password', 'toggleIcon')" id="toggleIcon"></i>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3">Login</button>
+
+            <div class="text-center mt-3">
+                <a href="{% url 'password_reset' %}" class="forgot-password">Forgot Password?</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function togglePasswordVisibility(fieldId, iconId) {
+        const passwordField = document.getElementById(fieldId);
+        const eyeIcon = document.getElementById(iconId);
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            eyeIcon.classList.replace("bi-eye-slash", "bi-eye");
+        } else {
+            passwordField.type = "password";
+            eyeIcon.classList.replace("bi-eye", "bi-eye-slash");
+        }
+    }
+</script>
+{% endblock %}

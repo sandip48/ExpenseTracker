@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - MyPocket{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+
+<div class="container text-center">
+    {% if user.is_authenticated %}
+        <h2>Welcome, {{ user.username }}!</h2>
+        <a href="{% url 'expenses' %}" class="btn btn-primary">Open Expenses</a>
+    {% else %}
+        <h2>Welcome to MyPocket!</h2>
+        <p>Please use the profile icon above to sign in or register.</p>
+    {% endif %}
+</div>
+{% endblock %}

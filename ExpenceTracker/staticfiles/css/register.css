@@ -1,0 +1,41 @@
+.container {
+    max-width: 400px;
+    margin: auto;
+}
+
+.input-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    width: 100%;
+}
+
+.input-box i {
+    font-size: 1.2rem;
+    color: #555;
+    margin-right: 10px;
+}
+
+.input-box input {
+    border: none;
+    outline: none;
+    background: none;
+    width: 100%;
+    font-size: 1rem;
+    padding: 5px;
+}
+
+.input-box .toggle-password {
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.forgot-password {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}

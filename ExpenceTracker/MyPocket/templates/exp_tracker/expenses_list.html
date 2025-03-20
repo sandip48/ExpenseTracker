@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+
+{% block content %}
+
+<div class="container-fluid">
+    <!-- Dark Mode Toggle -->
+    <button id="dark-mode-toggle" class="btn btn-secondary mb-3">Toggle Dark Mode</button>
+
+    <!-- Dashboard Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card summary-card">
+                <div class="card-body">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h5>First Expense</h5>
+                    <p>{{ first_expense_date|default:"N/A" }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card summary-card">
+                <div class="card-body">
+                    <i class="fas fa-calendar-check"></i>
+                    <h5>Last Expense</h5>
+                    <p>{{ last_expense_date|default:"N/A" }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card summary-card">
+                <div class="card-body">
+                    <i class="fas fa-list"></i>
+                    <h5>Total Expenses</h5>
+                    <p>{{ total_expenses }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card summary-card">
+                <div class="card-body">
+                    <i class="fas fa-rupee-sign"></i>
+                    <h5>Total Amount</h5>
+                    <p>₹{{ total_amount }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Toggle -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <select id="chart-toggle" class="form-control">
+                <option value="pie">Pie Chart</option>
+                <option value="bar">Bar Chart</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div id="pie_chart"></div>
+        </div>
+        <div class="col-md-6">
+            <div id="bar_chart" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Expense List -->
+    <div class="card">
+        <div class="card-header">Expense List</div>
+        <div class="card-body">
+            {% for year, months in expense_data.items %}
+                <h4>{{ year }}</h4>
+                {% for month, expenses in months.items %}
+                    <h5>{{ month }}</h5>
+                    {% for expense in expenses %}
+                        <div class="expense-item">
+                            <span>{{ expense.date }} - {{ expense.category }} - ₹{{ expense.amount }}</span>
+                            
+                            <!-- View Expense Details via AJAX -->
+                            <button class="btn btn-info btn-sm view-details" data-id="{{ expense.id }}">View</button>
+                            
+                            <!-- Direct Link to Expense Detail Page -->
+                            <a href="{% url 'expense_detail' expense.id %}" class="btn btn-secondary btn-sm">Full Details</a>
+                            
+                            <!-- Edit Expense -->
+                            <a href="{% url 'expense_edit' expense.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            
+                            <!-- Delete Expense -->
+                            <a href="{% url 'expense_delete' expense.id %}" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Add Expense Form (AJAX) -->
+    <div class="card mt-4">
+        <div class="card-header">Add Expense</div>
+        <div class="card-body">
+            <form id="expense-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Add Expense</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Expense Detail Modal -->
+<div id="expenseModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Expense Details</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="expense-detail-content">
+                Loading...
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var pieData = {{ pie_chart_data|safe }};
+        var barData = {{ bar_chart_data|safe }};
+
+        Plotly.newPlot('pie_chart', pieData.data, pieData.layout);
+        Plotly.newPlot('bar_chart', barData.data, barData.layout);
+
+        // Toggle between Pie and Bar chart
+        document.getElementById("chart-toggle").addEventListener("change", function () {
+            if (this.value === "pie") {
+                document.getElementById("pie_chart").style.display = "block";
+                document.getElementById("bar_chart").style.display = "none";
+            } else {
+                document.getElementById("pie_chart").style.display = "none";
+                document.getElementById("bar_chart").style.display = "block";
+            }
+        });
+
+        // Dark Mode Toggle
+        document.getElementById("dark-mode-toggle").addEventListener("click", function () {
+            document.body.classList.toggle("dark-mode");
+        });
+    });
+
+    // AJAX Add Expense
+    document.getElementById("expense-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+        let formData = new FormData(this);
+
+        fetch("{% url 'ajax_add_expense' %}", {
+            method: "POST",
+            body: formData,
+            headers: { "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Expense added successfully!");
+                location.reload();
+            } else {
+                alert("Error adding expense.");
+            }
+        });
+    });
+
+    // AJAX Expense Detail
+    document.querySelectorAll(".view-details").forEach(button => {
+        button.addEventListener("click", function () {
+            let expenseId = this.dataset.id;
+
+            fetch(`/expenses/ajax_expense_detail/${expenseId}/`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("expense-detail-content").innerHTML = data;
+                    $("#expenseModal").modal("show");
+                });
+        });
+    });
+</script>
+
+<style>
+    .summary-card { 
+        text-align: center; 
+        padding: 15px; 
+        background: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .dark-mode {
+        background-color: #222;
+        color: white;
+    }
+</style>
+
+{% endblock %}

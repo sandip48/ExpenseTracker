@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h3>Expense Details</h3>
+        </div>
+        <div class="card-body">
+            <p><strong>Name:</strong> {{ expense.name }}</p>
+            <p><strong>Amount:</strong> ₹{{ expense.amount }}</p>
+            <p><strong>Date:</strong> {{ expense.date }}</p>
+            <p><strong>Long Term:</strong> {% if expense.long_term %} Yes {% else %} No {% endif %}</p>
+            <p><strong>Interest Rate:</strong> {{ expense.interest_rate|default:"N/A" }}%</p>
+            <p><strong>End Date:</strong> {{ expense.end_date|default:"N/A" }}</p>
+            <p><strong>Monthly Expenses:</strong> ₹{{ expense.monthly_expenses|default:"N/A" }}</p>
+            <p><strong>Description:</strong> {{ expense.description|default:"No description provided" }}</p>
+
+            <!-- Edit & Delete Buttons -->
+            <a href="{% url 'expense_edit' expense.id %}" class="btn btn-primary">Edit Expense</a>
+            <a href="{% url 'expense_delete' expense.id %}" class="btn btn-danger">Delete Expense</a>
+            <a href="{% url 'expenses' %}" class="btn btn-secondary">Back to Expenses</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

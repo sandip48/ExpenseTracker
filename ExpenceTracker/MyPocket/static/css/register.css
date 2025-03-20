@@ -1,0 +1,71 @@
+/* Define light and dark mode variables */
+:root {
+    --bg-light: #ffffff;
+    --bg-dark: #1e1e1e;
+    --card-light: #f8f9fa;
+    --card-dark: #2a2a2a;
+    --text-light: #333;
+    --text-dark: #f8f9fa;
+    --input-bg-light: #ffffff;
+    --input-bg-dark: #2a2a2a;
+    --btn-primary-light: #007bff;
+    --btn-primary-dark: #0056b3;
+}
+
+/* Light Mode (Default) */
+body {
+    background: var(--bg-light);
+    color: var(--text-light);
+}
+
+.signup-card {
+    background: var(--card-light);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.input-box {
+    background: var(--input-bg-light);
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.input-box i {
+    color: var(--text-light);
+    margin-right: 8px;
+}
+
+.toggle-password {
+    cursor: pointer;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: var(--bg-dark);
+        color: var(--text-dark);
+    }
+
+    .signup-card {
+        background: var(--card-dark);
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .input-box {
+        background: var(--input-bg-dark);
+    }
+
+    .input-box i,
+    .toggle-password {
+        color: var(--text-dark);
+    }
+
+    .btn-primary {
+        background: var(--btn-primary-dark);
+    }
+
+    .btn-primary:hover {
+        background: #003f88;
+    }
+}

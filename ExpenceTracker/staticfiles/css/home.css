@@ -1,0 +1,112 @@
+/* Body styling for the home page */
+body {
+    background: linear-gradient(to right, #1D4ED8, #1E3A8A); /* Deep blue gradient */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+    color: #ffffff;
+    margin: 0;
+}
+
+/* Home Page Container */
+.home {
+    text-align: center;
+    color: #ffffff;
+    padding: 40px;
+    width: 90%;
+    max-width: 600px;
+    background: rgba(0, 0, 0, 0.2); /* Slight dark background to stand out */
+    border-radius: 20px;
+    box-shadow: 0px 10px 60px rgba(0, 0, 0, 0.3); /* Strong shadow for depth */
+    backdrop-filter: blur(8px); /* Background blur to add a premium look */
+    transition: transform 0.3s ease;
+}
+
+.home:hover {
+    transform: translateY(-5px); /* Subtle lift on hover */
+}
+
+/* Heading for the Welcome message */
+.home h2 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25); /* Soft shadow for readability */
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+/* Registration and Login Link Sections */
+.reg, .log {
+    margin-top: 20px;
+}
+
+.reg h2 a, .log h2 a {
+    font-size: 20px;
+    color: #4C73A6; /* Soft blue for the links */
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-block;
+    margin: 10px 0;
+}
+
+.reg h2 a:hover, .log h2 a:hover {
+    color: #1E3A8A; /* Dark blue on hover */
+    text-decoration: underline;
+    transform: scale(1.1); /* Slight scaling effect */
+}
+
+/* Welcome Message When User is Not Authenticated */
+.home .auth-message {
+    font-size: 20px;
+    color: #ffffff;
+    margin-bottom: 30px;
+}
+
+/* Styling for the 'Register' and 'Login' text containers */
+.reg h2, .log h2 {
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+/* For the navigation link texts (Register & Login) */
+.reg a, .log a {
+    color: #4C73A6; /* Light blue for links */
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.reg a:hover, .log a:hover {
+    color: #1E3A8A; /* Darker blue when hovered */
+    text-decoration: underline;
+}
+
+/* Container for the authenticated user links */
+.authenticated-user h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #ffffff;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* For the authenticated user links */
+.authenticated-user a {
+    font-size: 18px;
+    color: #4C73A6; /* Soft blue for links */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.authenticated-user a:hover {
+    color: #1E3A8A; /* Darker blue on hover */
+    text-decoration: underline;
+    transform: scale(1.05); /* Slight hover scale */
+}

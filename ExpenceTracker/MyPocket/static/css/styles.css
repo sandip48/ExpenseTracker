@@ -1,0 +1,62 @@
+/* Base styles for light mode */
+:root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --card-background: #f8f9fa;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode styles */
+[data-theme="dark"] {
+    --background-color: #121212;
+    --text-color: #ffffff;
+    --card-background: #1e1e1e;
+    --box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.card {
+    background: var(--card-background);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+    border-radius: 10px;
+    transition: background 0.3s;
+}
+
+.navbar {
+    background: var(--card-background);
+    color: var(--text-color);
+}
+
+.footer {
+    background: var(--card-background);
+    color: var(--text-color);
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* Toggle Button */
+.theme-toggle {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--text-color);
+    transition: color 0.3s;
+}
+
+/* Adjustments for dark mode consistency */
+.container, .content {
+    background: var(--background-color);
+    color: var(--text-color);
+    transition: background 0.3s, color 0.3s;
+}

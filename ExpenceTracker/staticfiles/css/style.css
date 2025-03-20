@@ -1,0 +1,211 @@
+/* General Styling */
+body {
+    padding-top: 56px;
+    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Light & Dark Mode Variables */
+:root {
+    --bg-light: #ffffff;
+    --bg-dark: #121212;
+    --text-light: #000000;
+    --text-dark: #ffffff;
+    --nav-light: #f8f9fa;
+    --nav-dark: #1f1f1f;
+    --footer-light: #f8f9fa;
+    --footer-dark: #343a40;
+    --card-light: #ffffff;
+    --card-dark: #1e1e1e;
+    --button-light: #6c757d;
+    --button-dark: #444;
+    --dropdown-light: #ffffff;
+    --dropdown-dark: #222;
+    --highlight-dark: #eeeeee;
+}
+
+/* Light Mode */
+.light-mode {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+}
+
+/* Dark Mode */
+.dark-mode {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* Navbar Styling */
+.navbar {
+    transition: background-color 0.3s;
+    padding: 10px 20px;
+}
+
+/* Navbar Light & Dark Mode */
+.light-mode .navbar {
+    background-color: var(--nav-light) !important;
+}
+.dark-mode .navbar {
+    background-color: var(--nav-dark) !important;
+}
+
+/* Navbar Brand (Logo) */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+.dark-mode .navbar-brand {
+    color: var(--highlight-dark) !important;
+}
+
+/* Navigation Links */
+.navbar-nav .nav-link {
+    font-size: 1rem;
+    font-weight: 500;
+}
+.dark-mode .navbar-nav .nav-link {
+    color: var(--highlight-dark) !important;
+}
+
+/* Profile & Logout Icons */
+.navbar .btn-link,
+.navbar .btn-danger {
+    font-size: 16px;
+}
+
+/* Theme Toggle Button */
+#theme-toggle {
+    transition: background 0.3s ease-in-out;
+}
+
+/* Navbar Toggler (Hamburger Menu) */
+.navbar-toggler {
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: border-color 0.3s;
+}
+.dark-mode .navbar-toggler {
+    border: 1px solid var(--highlight-dark);
+}
+
+/* Make menu icon WHITE in dark mode */
+.navbar-toggler-icon {
+    filter: invert(0);
+}
+.dark-mode .navbar-toggler-icon {
+    filter: invert(1);
+    background-color: white;
+    border-radius: 5px;
+}
+
+/* Cards */
+.card {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Light Mode Cards */
+.light-mode .card {
+    background-color: var(--card-light);
+    color: var(--text-light);
+}
+
+/* Dark Mode Cards */
+.dark-mode .card {
+    background-color: var(--card-dark);
+    color: var(--text-dark);
+}
+
+/* Buttons */
+.btn {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Dark Mode Button Styling */
+.dark-mode .btn-outline-secondary {
+    background-color: var(--button-dark);
+    color: var(--text-dark);
+}
+
+/* Dropdowns */
+.dropdown-menu {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Light Mode Dropdown */
+.light-mode .dropdown-menu {
+    background-color: var(--dropdown-light);
+    color: var(--text-light);
+}
+
+/* Dark Mode Dropdown */
+.dark-mode .dropdown-menu {
+    background-color: var(--dropdown-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .dropdown-item {
+    color: var(--text-dark);
+}
+
+.dark-mode .dropdown-item:hover {
+    background: #444;
+}
+
+/* Footer Styling */
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Light & Dark Mode Footer */
+.light-mode footer {
+    background-color: var(--footer-light);
+    color: var(--text-light);
+}
+
+.dark-mode footer {
+    background-color: var(--footer-dark);
+    color: var(--text-dark);
+}
+
+/* Make 'Expenses' and other important text more visible */
+h1, h2, h3, h4, h5, h6 {
+    transition: color 0.3s ease-in-out;
+}
+.dark-mode h1, 
+.dark-mode h2, 
+.dark-mode h3, 
+.dark-mode h4, 
+.dark-mode h5, 
+.dark-mode h6 {
+    color: var(--highlight-dark) !important;
+}
+
+/* Make expenses and icons more visible in dark mode */
+.expenses-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+.dark-mode .expenses-text {
+    color: white !important;
+}
+
+/* Smooth Hover Effects */
+.btn-primary, .btn-success {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar .d-flex {
+        flex-direction: column;
+        align-items: flex-end;
+        margin-top: 10px;
+    }
+}
