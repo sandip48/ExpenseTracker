@@ -1,71 +1,138 @@
-/* Define light and dark mode variables */
+/* Global Styles */
 :root {
-    --bg-light: #ffffff;
-    --bg-dark: #1e1e1e;
-    --card-light: #f8f9fa;
-    --card-dark: #2a2a2a;
+    --primary-color: #007bff;
+    --background-light: #f8f9fa;
+    --background-dark: #121212;
+    --card-light: #ffffff;
+    --card-dark: #1e1e1e;
     --text-light: #333;
-    --text-dark: #f8f9fa;
-    --input-bg-light: #ffffff;
-    --input-bg-dark: #2a2a2a;
-    --btn-primary-light: #007bff;
-    --btn-primary-dark: #0056b3;
+    --text-dark: #f1f1f1;
 }
 
-/* Light Mode (Default) */
 body {
-    background: var(--bg-light);
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-light);
     color: var(--text-light);
-}
-
-.signup-card {
-    background: var(--card-light);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.input-box {
-    background: var(--input-bg-light);
-    padding: 10px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-}
-
-.input-box i {
-    color: var(--text-light);
-    margin-right: 8px;
-}
-
-.toggle-password {
-    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* Dark Mode */
-@media (prefers-color-scheme: dark) {
-    body {
-        background: var(--bg-dark);
-        color: var(--text-dark);
-    }
+.dark-mode {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+}
 
+.dark-mode .signup-card {
+    background-color: var(--card-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode input, 
+.dark-mode button {
+    background-color: #2b2b2b;
+    color: var(--text-dark);
+    border: 1px solid #444;
+}
+
+.dark-mode a {
+    color: var(--primary-color);
+}
+
+/* Signup Card */
+.signup-card {
+    background: var(--card-light);
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.signup-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+/* Form Fields */
+.form-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.input-box {
+    background: #f1f1f1;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    transition: background 0.3s ease;
+    width: 100%;
+}
+
+.input-box i {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.input-box input {
+    border: none;
+    outline: none;
+    background: transparent;
+    flex: 1;
+    width: 100%;
+    padding-left: 8px;
+    font-size: 1rem;
+}
+
+/* Password Toggle */
+.toggle-password {
+    cursor: pointer;
+    color: #007bff;
+}
+
+/* Button */
+button {
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+button:hover {
+    background: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Sign In Link */
+.sign-in-link {
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    display: block;
+    margin-top: 10px;
+}
+
+.sign-in-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
     .signup-card {
-        background: var(--card-dark);
-        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
-    }
-
-    .input-box {
-        background: var(--input-bg-dark);
-    }
-
-    .input-box i,
-    .toggle-password {
-        color: var(--text-dark);
-    }
-
-    .btn-primary {
-        background: var(--btn-primary-dark);
-    }
-
-    .btn-primary:hover {
-        background: #003f88;
+        width: 90%;
+        padding: 20px;
     }
 }

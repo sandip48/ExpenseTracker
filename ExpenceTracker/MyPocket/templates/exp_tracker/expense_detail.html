@@ -3,25 +3,109 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="card">
-        <div class="card-header">
-            <h3>Expense Details</h3>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+                <i class="fas fa-receipt"></i> Expense Details
+            </h3>
         </div>
         <div class="card-body">
-            <p><strong>Name:</strong> {{ expense.name }}</p>
-            <p><strong>Amount:</strong> ₹{{ expense.amount }}</p>
-            <p><strong>Date:</strong> {{ expense.date }}</p>
-            <p><strong>Long Term:</strong> {% if expense.long_term %} Yes {% else %} No {% endif %}</p>
-            <p><strong>Interest Rate:</strong> {{ expense.interest_rate|default:"N/A" }}%</p>
-            <p><strong>End Date:</strong> {{ expense.end_date|default:"N/A" }}</p>
-            <p><strong>Monthly Expenses:</strong> ₹{{ expense.monthly_expenses|default:"N/A" }}</p>
-            <p><strong>Description:</strong> {{ expense.description|default:"No description provided" }}</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detail-item">
+                        <h5 class="detail-label">Name</h5>
+                        <p class="detail-value">{{ expense.name }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h5 class="detail-label">Amount</h5>
+                        <p class="detail-value">₹{{ expense.amount }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h5 class="detail-label">Date</h5>
+                        <p class="detail-value">{{ expense.date|date:"F j, Y" }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h5 class="detail-label">Category</h5>
+                        <p class="detail-value">{{ expense.category }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-item">
+                        <h5 class="detail-label">Long Term</h5>
+                        <p class="detail-value">
+                            {% if expense.long_term %}
+                                <span class="badge bg-success">Yes</span>
+                            {% else %}
+                                <span class="badge bg-secondary">No</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    {% if expense.long_term %}
+                    <div class="detail-item">
+                        <h5 class="detail-label">Interest Rate</h5>
+                        <p class="detail-value">{{ expense.interest_rate }}%</p>
+                    </div>
+                    <div class="detail-item">
+                        <h5 class="detail-label">End Date</h5>
+                        <p class="detail-value">{{ expense.end_date|date:"F j, Y" }}</p>
+                    </div>
+                    <div class="detail-item">
+                        <h5 class="detail-label">Monthly Payment</h5>
+                        <p class="detail-value">₹{{ expense.monthly_expenses }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
 
-            <!-- Edit & Delete Buttons -->
-            <a href="{% url 'expense_edit' expense.id %}" class="btn btn-primary">Edit Expense</a>
-            <a href="{% url 'expense_delete' expense.id %}" class="btn btn-danger">Delete Expense</a>
-            <a href="{% url 'expenses' %}" class="btn btn-secondary">Back to Expenses</a>
+            <div class="detail-item mt-3">
+                <h5 class="detail-label">Description</h5>
+                <div class="detail-value p-3 bg-light rounded">
+                    {{ expense.description|default:"No description provided"|linebreaks }}
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <div class="btn-group" role="group">
+                    <a href="{% url 'expense_edit' expense.id %}" class="btn btn-primary">Edit Expense</a>
+                    <a href="{% url 'expense_delete' expense.id %}" class="btn btn-danger">Delete Expense</a>
+                    <a href="{% url 'expenses_list' %}" class="btn btn-secondary">Back to Expenses</a>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+.detail-item {
+    margin-bottom: 1.5rem;
+}
+.detail-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.3rem;
+}
+.detail-value {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+}
+.card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add confirmation for delete button
+    const deleteBtn = document.querySelector('.btn-danger');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', function(e) {
+            if (!confirm('Are you sure you want to delete this expense?')) {
+                e.preventDefault();
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

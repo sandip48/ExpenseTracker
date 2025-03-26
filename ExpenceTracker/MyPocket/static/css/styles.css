@@ -1,62 +1,192 @@
-/* Base styles for light mode */
+/* ========== Root Variables ========== */
 :root {
-    --background-color: #ffffff;
-    --text-color: #000000;
-    --card-background: #f8f9fa;
-    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --bg-light: #f4f4f4;
+    --bg-dark: #121212;
+    --text-light: #222;
+    --text-dark: #e0e0e0;
+    --card-light: #ffffff;
+    --card-dark: #1e1e1e;
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --danger-color: #dc3545;
+    --success-color: #28a745;
+    --shadow-light: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --shadow-dark: 0 4px 8px rgba(255, 255, 255, 0.1);
 }
 
-/* Dark mode styles */
-[data-theme="dark"] {
-    --background-color: #121212;
-    --text-color: #ffffff;
-    --card-background: #1e1e1e;
-    --box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
-}
-
+/* ========== Global Styles ========== */
 body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-light);
+    color: var(--text-light);
+    transition: all 0.3s ease-in-out;
 }
 
-.card {
-    background: var(--card-background);
-    box-shadow: var(--box-shadow);
+.container-fluid {
     padding: 20px;
-    border-radius: 10px;
-    transition: background 0.3s;
 }
 
-.navbar {
-    background: var(--card-background);
-    color: var(--text-color);
-}
-
-.footer {
-    background: var(--card-background);
-    color: var(--text-color);
+/* ========== Summary Cards ========== */
+.summary-card {
+    background: var(--card-light);
+    box-shadow: var(--shadow-light);
+    border-radius: 12px;
     text-align: center;
-    padding: 10px;
-    border-radius: 10px;
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Toggle Button */
-.theme-toggle {
+.summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.summary-card::before {
+    content: "";
     position: absolute;
-    top: 15px;
-    right: 20px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    color: var(--text-color);
-    transition: color 0.3s;
+    width: 120px;
+    height: 120px;
+    background: rgba(0, 123, 255, 0.1);
+    border-radius: 50%;
+    top: -20px;
+    left: -20px;
 }
 
-/* Adjustments for dark mode consistency */
-.container, .content {
-    background: var(--background-color);
-    color: var(--text-color);
-    transition: background 0.3s, color 0.3s;
+.summary-card i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+}
+
+.summary-card h5 {
+    margin-top: 15px;
+    font-weight: 700;
+}
+
+.summary-card p {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+/* ========== Expense List ========== */
+.card {
+    background: var(--card-light);
+    box-shadow: var(--shadow-light);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    font-size: 1.3rem;
+    font-weight: bold;
+    background: var(--primary-color);
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+}
+
+/* Expense Items */
+.expense-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease;
+}
+
+.expense-item:hover {
+    background: rgba(0, 123, 255, 0.05);
+}
+
+.expense-item:last-child {
+    border-bottom: none;
+}
+
+.expense-item span {
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.expense-item .btn {
+    margin-left: 10px;
+    font-size: 0.9rem;
+    padding: 6px 10px;
+}
+
+/* ========== Buttons ========== */
+.btn {
+    transition: all 0.2s ease-in-out;
+    border-radius: 8px;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.btn-info {
+    background: var(--primary-color);
+    border: none;
+}
+
+.btn-primary {
+    background: var(--success-color);
+    border: none;
+}
+
+.btn-danger {
+    background: var(--danger-color);
+    border: none;
+}
+
+/* ========== Charts ========== */
+#chart-toggle {
+    width: 220px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* ========== Modal Styles ========== */
+.modal-content {
+    background: var(--card-light);
+    box-shadow: var(--shadow-light);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+/* ========== Responsive Design ========== */
+@media (max-width: 768px) {
+    .expense-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .expense-item .btn {
+        width: 100%;
+        margin-top: 6px;
+    }
+}
+
+/* ========== Dark Mode ========== */
+[data-theme="dark"] {
+    --bg-light: #121212;
+    --text-light: #e0e0e0;
+    --card-light: #1e1e1e;
+    --shadow-light: var(--shadow-dark);
+}
+
+[data-theme="dark"] .summary-card::before {
+    background: rgba(0, 123, 255, 0.2);
+}
+
+[data-theme="dark"] .expense-item:hover {
+    background: rgba(0, 123, 255, 0.15);
 }

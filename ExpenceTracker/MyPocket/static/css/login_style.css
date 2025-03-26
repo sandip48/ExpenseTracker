@@ -46,6 +46,7 @@ body {
     max-width: 400px;
     width: 100%;
     text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     transition: background 0.3s ease, color 0.3s ease;
 }
 
@@ -74,6 +75,7 @@ label {
     display: flex;
     align-items: center;
     transition: background 0.3s ease;
+    width: 100%;
 }
 
 .input-box i {
@@ -86,6 +88,7 @@ label {
     outline: none;
     background: transparent;
     flex: 1;
+    width: 100%;
     padding-left: 8px;
     font-size: 1rem;
 }
@@ -111,6 +114,7 @@ button {
 
 button:hover {
     background: #0056b3;
+    transform: scale(1.05);
 }
 
 /* Forgot Password */

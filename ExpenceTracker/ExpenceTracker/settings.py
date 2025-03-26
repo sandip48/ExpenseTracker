@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Your app
+    
     'MyPocket',  
 ]
 
@@ -43,7 +43,7 @@ ROOT_URLCONF = 'ExpenceTracker.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Correctly set templates directory
+        'DIRS': [BASE_DIR / 'templates'],  
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -61,10 +61,15 @@ WSGI_APPLICATION = 'ExpenceTracker.wsgi.application'
 # Database Configuration
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'expense_tracker',  
+        'USER': 'postgres',         
+        'PASSWORD': '783271271019*Ssp', 
+        'HOST': 'localhost',        
+        'PORT': '5432',             
     }
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -88,6 +93,10 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Ensure this folder exists
 
 # Media files (for profile pictures & uploads)
+# File upload settings
+MAX_UPLOAD_SIZE = 2 * 1024 * 1024  # 2MB
+FILE_UPLOAD_PERMISSIONS = 0o644
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2 * 1024 * 1024  # 2MB
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 

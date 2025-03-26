@@ -3,21 +3,88 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="card">
+    <div class="card border-danger">
         <div class="card-header bg-danger text-white">
-            <h3>Confirm Deletion</h3>
+            <h3 class="mb-0">
+                <i class="fas fa-exclamation-triangle"></i> Confirm Deletion
+            </h3>
         </div>
         <div class="card-body">
-            <p>Are you sure you want to delete the expense <strong>"{{ expense.name }}"</strong>?</p>
-            <p><strong>Amount:</strong> ₹{{ expense.amount }}</p>
-            <p><strong>Date:</strong> {{ expense.date }}</p>
+            <div class="alert alert-warning">
+                <strong>Warning:</strong> This action cannot be undone. The following expense will be permanently deleted:
+            </div>
+            
+            <div class="expense-details mb-4">
+                <h5>Expense Details</h5>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <strong>Name:</strong> {{ expense.name }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Amount:</strong> ₹{{ expense.amount }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Date:</strong> {{ expense.date|date:"F j, Y" }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Category:</strong> {{ expense.category }}
+                    </li>
+                    {% if expense.description %}
+                    <li class="list-group-item">
+                        <strong>Description:</strong> {{ expense.description }}
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
 
-            <form method="post">
+            <form method="post" id="delete-form">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Yes, Delete</button>
-                <a href="{% url 'expenses' %}" class="btn btn-secondary">Cancel</a>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-danger btn-lg">
+                        <i class="fas fa-trash-alt"></i> Confirm Delete
+                    </button>
+                    <a href="{% url 'expenses_list' %}" class="btn btn-secondary">Cancel</a>
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Prevent accidental form submission
+    const form = document.getElementById('delete-form');
+    let submitted = false;
+    
+    form.addEventListener('submit', function(e) {
+        if (submitted) {
+            e.preventDefault();
+            return;
+        }
+        
+        const confirmDelete = confirm('Are you absolutely sure you want to delete this expense? This cannot be undone.');
+        if (!confirmDelete) {
+            e.preventDefault();
+        } else {
+            submitted = true;
+            // Change button to show processing
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+            submitBtn.disabled = true;
+        }
+    });
+});
+</script>
+
+<style>
+.expense-details .list-group-item {
+    border-left: none;
+    border-right: none;
+}
+.expense-details .list-group-item:first-child {
+    border-top: none;
+}
+</style>
 {% endblock %}

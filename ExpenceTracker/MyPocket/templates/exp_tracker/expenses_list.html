@@ -1,22 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-</head>
 
 {% block content %}
-
 <div class="container-fluid">
-    <!-- Dark Mode Toggle -->
-    <button id="dark-mode-toggle" class="btn btn-secondary mb-3">Toggle Dark Mode</button>
-
-    <!-- Dashboard Summary Cards -->
     <div class="row mb-4">
+        <!-- Dashboard Summary Cards -->
         <div class="col-md-3">
             <div class="card summary-card">
                 <div class="card-body">
@@ -40,7 +28,7 @@
                 <div class="card-body">
                     <i class="fas fa-list"></i>
                     <h5>Total Expenses</h5>
-                    <p>{{ total_expenses }}</p>
+                    <p>{{ expense_count }}</p>
                 </div>
             </div>
         </div>
@@ -55,7 +43,6 @@
         </div>
     </div>
 
-    <!-- Chart Toggle -->
     <div class="row mb-4">
         <div class="col-md-4">
             <select id="chart-toggle" class="form-control">
@@ -65,7 +52,6 @@
         </div>
     </div>
 
-    <!-- Charts Section -->
     <div class="row mb-4">
         <div class="col-md-6">
             <div id="pie_chart"></div>
@@ -77,43 +63,106 @@
 
     <!-- Expense List -->
     <div class="card">
-        <div class="card-header">Expense List</div>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Expense List</span>
+            <div>
+                <a href="{% url 'category_list' %}" class="btn btn-info btn-sm mr-2">Manage Categories</a>
+                <a href="{% url 'expense_create' %}" class="btn btn-success btn-sm">Add New Expense</a>
+            </div>
+        </div>
         <div class="card-body">
-            {% for year, months in expense_data.items %}
-                <h4>{{ year }}</h4>
-                {% for month, expenses in months.items %}
-                    <h5>{{ month }}</h5>
-                    {% for expense in expenses %}
-                        <div class="expense-item">
-                            <span>{{ expense.date }} - {{ expense.category }} - ₹{{ expense.amount }}</span>
-                            
-                            <!-- View Expense Details via AJAX -->
-                            <button class="btn btn-info btn-sm view-details" data-id="{{ expense.id }}">View</button>
-                            
-                            <!-- Direct Link to Expense Detail Page -->
-                            <a href="{% url 'expense_detail' expense.id %}" class="btn btn-secondary btn-sm">Full Details</a>
-                            
-                            <!-- Edit Expense -->
-                            <a href="{% url 'expense_edit' expense.id %}" class="btn btn-primary btn-sm">Edit</a>
-                            
-                            <!-- Delete Expense -->
-                            <a href="{% url 'expense_delete' expense.id %}" class="btn btn-danger btn-sm">Delete</a>
+            {% if not expenses %}
+                <div class="alert alert-info">No expenses recorded yet.</div>
+            {% else %}
+                {% regroup expenses by date.year as year_list %}
+                {% for year in year_list %}
+                    <h4>{{ year.grouper }}</h4>
+                    {% regroup year.list by date.month as month_list %}
+                    {% for month in month_list %}
+                        <h5>{{ month.list.0.date|date:"F" }}</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Amount</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for expense in month.list %}
+                                    <tr>
+                                        <td>{{ expense.date|date:"Y-m-d" }}</td>
+                                        <td>{{ expense.name }}</td>
+                                        <td>
+                                            {% if expense.category %}
+                                                <span class="badge badge-primary">{{ expense.category.name }}</span>
+                                            {% else %}
+                                                <span class="badge badge-secondary">Uncategorized</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>₹{{ expense.amount }}</td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <button class="btn btn-info view-details" data-id="{{ expense.id }}">View</button>
+                                                <a href="{% url 'expense_detail' expense.id %}" class="btn btn-secondary">Details</a>
+                                                <a href="{% url 'expense_edit' expense.id %}" class="btn btn-primary">Edit</a>
+                                                <a href="{% url 'expense_delete' expense.id %}" class="btn btn-danger">Delete</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                     {% endfor %}
                 {% endfor %}
-            {% endfor %}
+            {% endif %}
         </div>
     </div>
 
-    <!-- Add Expense Form (AJAX) -->
+    <!-- Quick Add Expense Form (AJAX) -->
     <div class="card mt-4">
-        <div class="card-header">Add Expense</div>
+        <div class="card-header">Quick Add Expense</div>
         <div class="card-body">
-            <form id="expense-form">
+            <form id="expense-form" method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
+                <div class="form-group">
+                    <label for="id_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="id_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_amount">Amount (₹)</label>
+                    <input type="number" class="form-control" name="amount" id="id_amount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_category">Category</label>
+                    <select class="form-control" name="category" id="id_category">
+                        <option value="">Select a category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="id_new_category">Or Create New Category</label>
+                    <input type="text" class="form-control" name="new_category" id="id_new_category" 
+                           placeholder="Enter new category name">
+                    <small class="form-text text-muted">Leave blank to use existing category</small>
+                </div>
+                <div class="form-group">
+                    <label for="id_date">Date</label>
+                    <input type="date" class="form-control" name="date" id="id_date" required value="{% now 'Y-m-d' %}">
+                </div>
+                <div class="form-group">
+                    <label for="id_description">Description (Optional)</label>
+                    <textarea class="form-control" name="description" id="id_description" rows="2"></textarea>
+                </div>
                 <button type="submit" class="btn btn-primary">Add Expense</button>
             </form>
+            <div id="response-message" class="mt-2"></div>
         </div>
     </div>
 </div>
@@ -129,18 +178,23 @@
             <div class="modal-body" id="expense-detail-content">
                 Loading...
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- JavaScript -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var pieData = {{ pie_chart_data|safe }};
-        var barData = {{ bar_chart_data|safe }};
-
-        Plotly.newPlot('pie_chart', pieData.data, pieData.layout);
-        Plotly.newPlot('bar_chart', barData.data, barData.layout);
+        // Initialize charts if data exists
+        {% if pie_chart %}
+            Plotly.newPlot('pie_chart', {{ pie_chart|safe }});
+        {% endif %}
+        
+        {% if bar_chart %}
+            Plotly.newPlot('bar_chart', {{ bar_chart|safe }});
+        {% endif %}
 
         // Toggle between Pie and Bar chart
         document.getElementById("chart-toggle").addEventListener("change", function () {
@@ -153,60 +207,110 @@
             }
         });
 
-        // Dark Mode Toggle
-        document.getElementById("dark-mode-toggle").addEventListener("click", function () {
-            document.body.classList.toggle("dark-mode");
-        });
-    });
-
-    // AJAX Add Expense
-    document.getElementById("expense-form").addEventListener("submit", function(event) {
-        event.preventDefault();
-        let formData = new FormData(this);
-
-        fetch("{% url 'ajax_add_expense' %}", {
-            method: "POST",
-            body: formData,
-            headers: { "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert("Expense added successfully!");
-                location.reload();
-            } else {
-                alert("Error adding expense.");
+        // Handle form submission
+        document.getElementById("expense-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            
+            // Handle category selection
+            const categorySelect = document.getElementById('id_category');
+            const newCategoryInput = document.getElementById('id_new_category');
+            
+            if (newCategoryInput.value.trim() !== '') {
+                categorySelect.value = '';
             }
+
+            fetch("{% url 'add_expense_ajax' %}", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err; });
+                }
+                return response.json();
+            })
+            .then(data => {
+                const responseMessage = document.getElementById("response-message");
+                if (data.success) {
+                    responseMessage.innerHTML = `
+                        <div class="alert alert-success">
+                            ${data.message}
+                        </div>
+                    `;
+                    // Clear form and reload after 2 seconds
+                    this.reset();
+                    document.getElementById('id_date').value = new Date().toISOString().slice(0, 10);
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    let errorHtml = `<div class="alert alert-danger"><ul>`;
+                    if (data.errors) {
+                        for (const field in data.errors) {
+                            data.errors[field].forEach(error => {
+                                errorHtml += `<li>${field}: ${error.message || error}</li>`;
+                            });
+                        }
+                    } else {
+                        errorHtml += `<li>An unknown error occurred</li>`;
+                    }
+                    errorHtml += `</ul></div>`;
+                    responseMessage.innerHTML = errorHtml;
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("response-message").innerHTML = `
+                    <div class="alert alert-danger">
+                        An error occurred: ${error.message || 'Please try again'}
+                    </div>
+                `;
+            });
         });
-    });
 
-    // AJAX Expense Detail
-    document.querySelectorAll(".view-details").forEach(button => {
-        button.addEventListener("click", function () {
-            let expenseId = this.dataset.id;
-
-            fetch(`/expenses/ajax_expense_detail/${expenseId}/`)
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById("expense-detail-content").innerHTML = data;
-                    $("#expenseModal").modal("show");
-                });
+        // Handle view details buttons
+        document.querySelectorAll(".view-details").forEach(button => {
+            button.addEventListener("click", function() {
+                const expenseId = this.dataset.id;
+                fetch(`{% url 'expense_detail_ajax' 0 %}`.replace('0', expenseId))
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const modalContent = document.getElementById("expense-detail-content");
+                        modalContent.innerHTML = `
+                            <p><strong>Name:</strong> ${data.name}</p>
+                            <p><strong>Amount:</strong> ₹${data.amount}</p>
+                            <p><strong>Category:</strong> ${data.category || 'Uncategorized'}</p>
+                            <p><strong>Date:</strong> ${data.date}</p>
+                            <p><strong>Description:</strong> ${data.description || 'No description provided'}</p>
+                            ${data.long_term ? `
+                            <p><strong>Long Term:</strong> Yes</p>
+                            <p><strong>Interest Rate:</strong> ${data.interest_rate || 'N/A'}%</p>
+                            <p><strong>Monthly Payment:</strong> ₹${data.monthly_expenses || 'N/A'}</p>
+                            ` : ''}
+                        `;
+                        $('#expenseModal').modal('show');
+                    })
+                    .catch(error => {
+                        console.error("Error fetching expense details:", error);
+                        document.getElementById("expense-detail-content").innerHTML = `
+                            <div class="alert alert-danger">
+                                Failed to load expense details. Please try again.
+                            </div>
+                        `;
+                        $('#expenseModal').modal('show');
+                    });
+            });
         });
     });
 </script>
-
-<style>
-    .summary-card { 
-        text-align: center; 
-        padding: 15px; 
-        background: #f8f9fa;
-        border-radius: 8px;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .dark-mode {
-        background-color: #222;
-        color: white;
-    }
-</style>
-
 {% endblock %}

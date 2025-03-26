@@ -12,14 +12,11 @@
 
         {% if form.errors %}
         <div class="alert alert-danger">
-            <strong>Error:</strong>
-            <ul>
-                {% for field, errors in form.errors.items %}
-                    {% for error in errors %}
-                        <li>{{ field|title }}: {{ error }}</li>
-                    {% endfor %}
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <p>{{ error }}</p>
                 {% endfor %}
-            </ul>
+            {% endfor %}
         </div>
         {% endif %}
 
@@ -27,52 +24,50 @@
             {% csrf_token %}
 
             <div class="form-group">
-                <label for="{{ form.username.id_for_label }}">Username:</label>
+                <label for="id_username">Username:</label>
                 <div class="input-box">
-                    <i class="bi bi-person-fill icon"></i>
+                    <i class="bi bi-person-fill"></i>
                     {{ form.username }}
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="{{ form.email.id_for_label }}">Email:</label>
+                <label for="id_email">Email:</label>
                 <div class="input-box">
-                    <i class="bi bi-envelope-fill icon"></i>
+                    <i class="bi bi-envelope-fill"></i>
                     {{ form.email }}
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="{{ form.mobile_number.id_for_label }}">Phone Number:</label>
+                <label for="id_mobile_number">Phone Number:</label>
                 <div class="input-box">
-                    <i class="bi bi-phone-fill icon"></i>
+                    <i class="bi bi-phone-fill"></i>
                     {{ form.mobile_number }}
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="{{ form.password1.id_for_label }}">Password:</label>
+                <label for="id_password1">Password:</label>
                 <div class="input-box">
-                    <i class="bi bi-lock-fill icon"></i>
+                    <i class="bi bi-lock-fill"></i>
                     {{ form.password1 }}
-                    <i class="bi bi-eye-slash toggle-password" onclick="togglePasswordVisibility('id_password1', this)"></i>
+                    <i class="bi bi-eye-slash toggle-password" onclick="togglePasswordVisibility('id_password1', 'toggleIcon1')" id="toggleIcon1"></i>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+                <label for="id_password2">Confirm Password:</label>
                 <div class="input-box">
-                    <i class="bi bi-lock-fill icon"></i>
+                    <i class="bi bi-lock-fill"></i>
                     {{ form.password2 }}
-                    <i class="bi bi-eye-slash toggle-password" onclick="togglePasswordVisibility('id_password2', this)"></i>
+                    <i class="bi bi-eye-slash toggle-password" onclick="togglePasswordVisibility('id_password2', 'toggleIcon2')" id="toggleIcon2"></i>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="{{ form.profile_picture.id_for_label }}">Profile Picture:</label>
-                <div class="input-box">
-                    {{ form.profile_picture }}
-                </div>
+                <label for="id_profile_picture">Profile Picture:</label>
+                <input type="file" name="profile_picture" id="id_profile_picture" class="form-control">
             </div>
 
             <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
@@ -85,15 +80,16 @@
 </div>
 
 <script>
-    function togglePasswordVisibility(fieldId, icon) {
+    function togglePasswordVisibility(fieldId, iconId) {
         const passwordField = document.getElementById(fieldId);
+        const eyeIcon = document.getElementById(iconId);
 
         if (passwordField.type === "password") {
             passwordField.type = "text";
-            icon.classList.replace("bi-eye-slash", "bi-eye");
+            eyeIcon.classList.replace("bi-eye-slash", "bi-eye");
         } else {
             passwordField.type = "password";
-            icon.classList.replace("bi-eye", "bi-eye-slash");
+            eyeIcon.classList.replace("bi-eye", "bi-eye-slash");
         }
     }
 </script>

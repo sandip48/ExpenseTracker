@@ -4,18 +4,171 @@
 {% block content %}
 <div class="container mt-4">
     <div class="card">
-        <div class="card-header">
-            <h3>{% if object %}Edit Expense{% else %}Add Expense{% endif %}</h3>
+        <div class="card-header {% if object %}bg-primary text-white{% endif %}">
+            <h3>{% if object %}Edit Expense{% else %}Add New Expense{% endif %}</h3>
         </div>
         <div class="card-body">
-            <form method="post">
+            <form method="post" id="expense-form">
                 {% csrf_token %}
-                {{ form.as_p }}
+                
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+                
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Expense Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.name.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.amount.id_for_label }}">Amount (₹)</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">₹</span>
+                        </div>
+                        {{ form.amount }}
+                    </div>
+                    {% if form.amount.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.amount.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.category.id_for_label }}">Category</label>
+                    {{ form.category }}
+                    {% if form.category.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.category.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.date.id_for_label }}">Date</label>
+                    {{ form.date }}
+                    {% if form.date.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.date.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">Description</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.description.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group form-check">
+                    {{ form.long_term }}
+                    <label class="form-check-label" for="{{ form.long_term.id_for_label }}">Long Term Expense</label>
+                    {% if form.long_term.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.long_term.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group" id="interest-rate-group" style="display: none;">
+                    <label for="{{ form.interest_rate.id_for_label }}">Interest Rate (%)</label>
+                    {{ form.interest_rate }}
+                    {% if form.interest_rate.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.interest_rate.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group" id="end-date-group" style="display: none;">
+                    <label for="{{ form.end_date.id_for_label }}">End Date</label>
+                    {{ form.end_date }}
+                    {% if form.end_date.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.end_date.errors }}
+                        </div>
+                    {% endif %}
+                </div>
 
-                <button type="submit" class="btn btn-success">{% if object %}Update Expense{% else %}Add Expense{% endif %}</button>
-                <a href="{% url 'expenses' %}" class="btn btn-secondary">Cancel</a>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> {% if object %}Update Expense{% else %}Add Expense{% endif %}
+                    </button>
+                    <a href="{% url 'expenses_list' %}" class="btn btn-secondary">Cancel</a>
+                        
+                    
+                </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle long-term expense fields
+    const longTermCheckbox = document.getElementById('{{ form.long_term.id_for_label }}');
+    const interestRateGroup = document.getElementById('interest-rate-group');
+    const endDateGroup = document.getElementById('end-date-group');
+    
+    function toggleLongTermFields() {
+        if (longTermCheckbox.checked) {
+            interestRateGroup.style.display = 'block';
+            endDateGroup.style.display = 'block';
+        } else {
+            interestRateGroup.style.display = 'none';
+            endDateGroup.style.display = 'none';
+        }
+    }
+    
+    longTermCheckbox.addEventListener('change', toggleLongTermFields);
+    toggleLongTermFields(); // Initialize on page load
+    
+    // Add Bootstrap validation classes
+    const form = document.getElementById('expense-form');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    });
+});
+</script>
+
+<style>
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: .25rem;
+    font-size: 80%;
+    color: #dc3545;
+}
+.invalid-feedback.d-block {
+    display: block;
+}
+.is-invalid {
+    border-color: #dc3545;
+}
+.is-valid {
+    border-color: #28a745;
+}
+</style>
 {% endblock %}
