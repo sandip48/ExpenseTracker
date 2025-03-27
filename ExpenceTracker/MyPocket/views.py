@@ -19,6 +19,7 @@ from collections import defaultdict
 from django.db.models import Sum, Count, Min, Max
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from django.contrib import messages
 
 from .models import Expense, UserProfile, Category
 from .forms import ExpenseForm, CustomUserCreationForm, UserProfileForm, CategoryForm
@@ -122,30 +123,47 @@ def category_create(request):
             category = form.save(commit=False)
             category.user = request.user
             category.save()
+            messages.success(request, 'Category created successfully!')
             return redirect('category_list')
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = CategoryForm()
     return render(request, 'categories/category_form.html', {'form': form})
 
 @login_required
 def category_edit(request, pk):
-    """Edit an existing category"""
-    category = get_object_or_404(Category, pk=pk, user=request.user)
+    """Edit an existing category with enhanced error handling"""
+    try:
+        category = Category.objects.get(pk=pk, user=request.user)
+    except Category.DoesNotExist:
+        logger.warning(f"Category edit failed - ID {pk} not found for user {request.user}")
+        messages.error(request, 'Category not found or you don\'t have permission to edit it.')
+        return redirect('category_list')
+
     if request.method == 'POST':
         form = CategoryForm(request.POST, instance=category)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Category updated successfully!')
             return redirect('category_list')
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = CategoryForm(instance=category)
-    return render(request, 'categories/category_form.html', {'form': form})
+    
+    return render(request, 'categories/category_form.html', {
+        'form': form,
+        'category': category  # Pass category to template
+    })
 
 @login_required
 def category_delete(request, pk):
-    """Delete a category"""
+    """Delete a category with confirmation"""
     category = get_object_or_404(Category, pk=pk, user=request.user)
     if request.method == 'POST':
         category.delete()
+        messages.success(request, 'Category deleted successfully!')
         return redirect('category_list')
     return render(request, 'categories/category_confirm_delete.html', {'category': category})
 
