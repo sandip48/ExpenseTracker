@@ -2,6 +2,9 @@
 {% load static %}
 
 {% block content %}
+<br>
+<br>
+<br>
 <div class="container-fluid">
     <div class="row mb-4">
         <!-- Dashboard Summary Cards -->
@@ -160,7 +163,9 @@
                     <label for="id_description">Description (Optional)</label>
                     <textarea class="form-control" name="description" id="id_description" rows="2"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Add Expense</button>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Add Expense</button>
+                </div>
             </form>
             <div id="response-message" class="mt-2"></div>
         </div>
@@ -184,6 +189,9 @@
         </div>
     </div>
 </div>
+<br>
+<br>
+<br>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

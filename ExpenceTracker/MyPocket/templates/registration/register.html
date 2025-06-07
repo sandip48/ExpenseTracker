@@ -5,92 +5,129 @@
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/register.css' %}">
-
+<br>
+<br><br>
+<!-- <div class="auth-container">
+    <div class="auth-card"> -->
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card signup-card p-4 shadow-lg">
-        <h2 class="text-center mb-3">Sign Up</h2>
+    <div class="card login-card p-4 shadow-lg">
+        <div class="auth-header">
+            <h2>Create Your Account</h2>
+            <p class="auth-subtitle">Start managing your finances today</p>
+        </div>
 
         {% if form.errors %}
-        <div class="alert alert-danger">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
             {% for field, errors in form.errors.items %}
                 {% for error in errors %}
                     <p>{{ error }}</p>
                 {% endfor %}
             {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endif %}
 
-        <form method="post" action="{% url 'register' %}" enctype="multipart/form-data">
+        <form method="post" action="{% url 'register' %}" enctype="multipart/form-data" class="auth-form">
             {% csrf_token %}
 
+            <!-- Username Field -->
             <div class="form-group">
-                <label for="id_username">Username:</label>
+                <label for="id_username">Username</label>
                 <div class="input-box">
                     <i class="bi bi-person-fill"></i>
-                    {{ form.username }}
+                    <input type="text" id="id_username" name="username" placeholder="Enter username" required>
                 </div>
+                <small class="form-text">Choose a unique username</small>
             </div>
 
+            <!-- Email Field -->
             <div class="form-group">
-                <label for="id_email">Email:</label>
+                <label for="id_email">Email</label>
                 <div class="input-box">
                     <i class="bi bi-envelope-fill"></i>
-                    {{ form.email }}
+                    <input type="email" id="id_email" name="email" placeholder="Enter email" required>
                 </div>
+                <small class="form-text">We'll never share your email</small>
             </div>
 
+            <!-- Phone Number Field -->
             <div class="form-group">
-                <label for="id_mobile_number">Phone Number:</label>
+                <label for="id_mobile_number">Phone Number</label>
                 <div class="input-box">
                     <i class="bi bi-phone-fill"></i>
-                    {{ form.mobile_number }}
+                    <input type="tel" id="id_mobile_number" name="mobile_number" placeholder="Enter phone number">
                 </div>
             </div>
 
+            <!-- Password Field -->
             <div class="form-group">
-                <label for="id_password1">Password:</label>
+                <label for="id_password1">Password</label>
                 <div class="input-box">
                     <i class="bi bi-lock-fill"></i>
-                    {{ form.password1 }}
-                    <i class="bi bi-eye-slash toggle-password" onclick="togglePasswordVisibility('id_password1', 'toggleIcon1')" id="toggleIcon1"></i>
+                    <input type="password" id="id_password1" name="password1" placeholder="Password" required>
+                    <i class="bi bi-eye-slash toggle-password" onclick="togglePasswordVisibility('id_password1', this)"></i>
                 </div>
+                <small class="form-text">At least 8 characters with numbers</small>
             </div>
 
+            <!-- Confirm Password Field -->
             <div class="form-group">
-                <label for="id_password2">Confirm Password:</label>
+                <label for="id_password2">Confirm Password</label>
                 <div class="input-box">
                     <i class="bi bi-lock-fill"></i>
-                    {{ form.password2 }}
-                    <i class="bi bi-eye-slash toggle-password" onclick="togglePasswordVisibility('id_password2', 'toggleIcon2')" id="toggleIcon2"></i>
+                    <input type="password" id="id_password2" name="password2" placeholder="Confirm Password" required>
+                    <i class="bi bi-eye-slash toggle-password" onclick="togglePasswordVisibility('id_password2', this)"></i>
                 </div>
             </div>
 
+            <!-- Profile Picture Field -->
             <div class="form-group">
-                <label for="id_profile_picture">Profile Picture:</label>
-                <input type="file" name="profile_picture" id="id_profile_picture" class="form-control">
+                <label>Profile Picture (Optional)</label>
+                <div class="file-upload-wrapper">
+                    <input type="file" id="id_profile_picture" name="profile_picture" class="file-upload-input">
+                    <label for="id_profile_picture" class="file-upload-label">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                        <span>Choose a file</span>
+                    </label>
+                    <div class="file-upload-name">No file chosen</div>
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary auth-submit-btn">
+                <span>Create Account</span>
+                <i class="bi bi-arrow-right"></i>
+            </button>
 
-            <div class="text-center mt-2">
-                <a href="{% url 'login' %}" class="forgot-password">Already have an account? <strong>Sign In</strong></a>
-            </div>
+            <!-- Sign In Link -->
+
         </form>
     </div>
 </div>
+<br>            <div class="auth-footer">
+                <p>Already have an account? <a href="{% url 'login' %}" class="auth-link">Sign In</a></p>
+            </div>
+<br>
+<br>
+
 
 <script>
-    function togglePasswordVisibility(fieldId, iconId) {
+    function togglePasswordVisibility(fieldId, iconElement) {
         const passwordField = document.getElementById(fieldId);
-        const eyeIcon = document.getElementById(iconId);
-
+        
         if (passwordField.type === "password") {
             passwordField.type = "text";
-            eyeIcon.classList.replace("bi-eye-slash", "bi-eye");
+            iconElement.classList.replace("bi-eye-slash", "bi-eye");
         } else {
             passwordField.type = "password";
-            eyeIcon.classList.replace("bi-eye", "bi-eye-slash");
+            iconElement.classList.replace("bi-eye", "bi-eye-slash");
         }
     }
+
+    // Update file name display when a file is selected
+    document.getElementById('id_profile_picture').addEventListener('change', function(e) {
+        const fileNameDisplay = document.querySelector('.file-upload-name');
+        fileNameDisplay.textContent = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
+    });
 </script>
 {% endblock %}

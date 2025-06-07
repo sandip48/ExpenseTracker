@@ -155,11 +155,11 @@ class CategoryAdmin(admin.ModelAdmin):
         return "-"
     remaining_budget.short_description = 'Remaining Budget'
 
-# Unregister the default User admin and register our custom one
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
-# Register models with their custom admin classes
+
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Expense, ExpenseAdmin)
 admin.site.register(Account, AccountAdmin)
