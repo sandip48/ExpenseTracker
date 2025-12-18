@@ -11,7 +11,7 @@ SECRET_KEY = 'django-insecure-vy$uv8uc_djuiy!tj=axls=345zrle&ta((x89f33)jx72s#@n
 DEBUG = True
 
 # Hosts allowed to serve the application
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 # Application definition
 INSTALLED_APPS = [
@@ -21,29 +21,29 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    
-    'MyPocket',  
+    'MyPocket',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
+
+# Remove cache middleware for development (optional)
+# If you want caching, add it back but configure CACHES settings
 
 ROOT_URLCONF = 'ExpenceTracker.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -51,6 +51,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'MyPocket.context_processors.site_settings',  # Add your context processor
             ],
         },
     },
@@ -58,18 +59,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ExpenceTracker.wsgi.application'
 
-# Database Configuration
+# Database Configuration - SQLite
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'expense_tracker',  
-        'USER': 'postgres',         
-        'PASSWORD': '783271271019*Ssp', 
-        'HOST': 'localhost',        
-        'PORT': '5432',             
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        'OPTIONS': {
+            'timeout': 20,  # Increase timeout for better concurrency
+        }
     }
 }
-
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -88,12 +87,14 @@ USE_TZ = True
 # Static files settings
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'MyPocket' / 'static',  # Updated static directory setting
+    BASE_DIR / 'MyPocket' / 'static',
 ]
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Ensure this folder exists
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Add Whitenoise for static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files (for profile pictures & uploads)
-# File upload settings
 MAX_UPLOAD_SIZE = 2 * 1024 * 1024  # 2MB
 FILE_UPLOAD_PERMISSIONS = 0o644
 FILE_UPLOAD_MAX_MEMORY_SIZE = 2 * 1024 * 1024  # 2MB
@@ -108,3 +109,48 @@ LOGOUT_REDIRECT_URL = '/'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Site settings for context processor
+SITE_NAME = 'MyPocket Expense Tracker'
+
+# Email settings (for development)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Session settings
+SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
+SESSION_SAVE_EVERY_REQUEST = True
+
+# Security settings for development
+# In production, set these to True
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'MyPocket': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}

@@ -45,3 +45,7 @@ python-dateutil>=2.8,<3.0  # Advanced date parsing (optional)
 
 # Monitoring and logging
 # sentry-sdk>=1.35,<2.0  # Error tracking (optional)
+
+Django>=4.2,<5.0
+Pillow>=10.0,<11.0
+whitenoise>=6.5,<7.0
