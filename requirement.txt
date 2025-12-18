@@ -49,3 +49,8 @@ python-dateutil>=2.8,<3.0  # Advanced date parsing (optional)
 Django>=4.2,<5.0
 Pillow>=10.0,<11.0
 whitenoise>=6.5,<7.0
+
+# Data visualization (for your Plotly charts)
+plotly>=5.0,<6.0
+numpy>=1.24,<2.0  # Required by Plotly Express
+pandas>=2.0,<3.0  # Useful for data handling with Plotly
