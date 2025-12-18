@@ -1,0 +1,47 @@
+# Core Django
+Django>=4.2,<5.0
+asgiref>=3.7,<4.0
+sqlparse>=0.4.4,<0.6
+
+# Database (choose one based on your setup)
+# PostgreSQL
+psycopg2-binary>=2.9,<3.0
+# OR MySQL
+# mysqlclient>=2.2,<3.0
+# OR SQLite (included with Python)
+
+# File handling and media
+Pillow>=10.0,<11.0  # For image field support
+
+# Security
+bcrypt>=4.1,<5.0  # Optional for password hashing
+argon2-cffi>=23.1,<24.0  # Optional for password hashing
+
+# Development tools
+# ipdb>=0.13,<0.14  # Debugging (optional)
+# django-debug-toolbar>=4.0,<5.0  # Debugging (optional)
+
+# Deployment
+gunicorn>=21.0,<22.0  # WSGI server for production
+whitenoise>=6.5,<7.0  # Static file serving
+python-dotenv>=1.0,<2.0  # Environment variables
+
+# Date/Time handling
+python-dateutil>=2.8,<3.0  # Advanced date parsing (optional)
+
+# Code quality tools
+# black>=23.0,<24.0  # Code formatting (optional)
+# flake8>=6.0,<7.0  # Linting (optional)
+# pylint-django>=2.5,<3.0  # Django-specific linting (optional)
+
+# Testing
+# pytest>=7.4,<8.0  # Testing framework (optional)
+# pytest-django>=4.7,<5.0  # Django testing plugin (optional)
+# pytest-cov>=4.1,<5.0  # Test coverage (optional)
+
+# Documentation
+# sphinx>=7.0,<8.0  # Documentation generator (optional)
+# sphinx-rtd-theme>=1.3,<2.0  # ReadTheDocs theme (optional)
+
+# Monitoring and logging
+# sentry-sdk>=1.35,<2.0  # Error tracking (optional)
